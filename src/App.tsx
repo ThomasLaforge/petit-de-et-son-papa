@@ -23,6 +23,7 @@ function App() {
       {diceValues.map((valeur, index) => (
         <Die 
           key={index}
+          value={valeur} 
           onRoll={(value: number) => handleRoll(index, value)} 
         />
       ))}
