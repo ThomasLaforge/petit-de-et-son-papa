@@ -6,9 +6,16 @@ import { Die } from './components/Die'
 
 function App() {
 
+  const [value, setValue] = useState(0)
+
+  const handleRoll = (value: number) => {
+    setValue(value)
+  }
+
   return (
     <>
-      <Die />
+      <Die onRoll={handleRoll} />
+      <p>{value}</p>
     </>
   )
 }
