@@ -1,21 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useCallback, useMemo, useState } from 'react'
 import './App.css'
 import { Die } from './components/Die'
 
 function App() {
+  const [diceValues, setValues] = useState([2, 5, 6]);
 
-  const [value, setValue] = useState(0)
+  const sum = useMemo(() => diceValues.reduce((a, b) => a + b, 0), [diceValues])
 
-  const handleRoll = (value: number) => {
-    setValue(value)
-  }
+  const handleRoll = useCallback(
+    (diceIndex: number, newValue: number) => {
+      setValues((prev) => {
+        const newValues = [...prev]
+        newValues[diceIndex] = newValue
+        return newValues
+      })
+    },
+    []
+  )
 
   return (
     <>
-      <Die onRoll={handleRoll} />
-      <p>{value}</p>
+      {diceValues.map((valeur, index) => (
+        <Die 
+          key={index}
+          onRoll={(value: number) => handleRoll(index, value)} 
+        />
+      ))}
+      <div className="sum">Sum: {sum}</div>
     </>
   )
 }
