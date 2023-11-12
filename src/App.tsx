@@ -1,17 +1,29 @@
-import { useCallback, useMemo, useState } from 'react'
+import { ChangeEvent, useCallback, useMemo, useState } from 'react'
 import './App.css'
 import { Die } from './components/Die'
 
 function App() {
-  const [diceValues, setValues] = useState([2, 5, 6]);
+  const [diceValues, setValues] = useState([0, 3, 5]);
+  const [inputValue, setInputValue] = useState('')
 
-  const sum = useMemo(() => diceValues.reduce((a, b) => a + b, 0), [diceValues])
-
+  const diceSum = useMemo(
+    () => {
+      let sum = 0
+      for(let i = 0; i < diceValues.length; i++) {
+        sum += diceValues[i]
+      }
+      return sum
+    },
+    [diceValues]
+  )
+  
   const handleRoll = useCallback(
-    (diceIndex: number, newValue: number) => {
-      setValues((prev) => {
-        const newValues = [...prev]
-        newValues[diceIndex] = newValue
+    (dicePosition: number, newVal: number) => {
+      console.log(`Dice ${dicePosition} rolled ${newVal}`);
+      
+      setValues((oldValues) => {
+        const newValues = [...oldValues]
+        newValues[dicePosition] = newVal
         return newValues
       })
     },
@@ -20,14 +32,14 @@ function App() {
 
   return (
     <>
-      {diceValues.map((valeur, index) => (
-        <Die 
-          key={index}
-          value={valeur} 
-          onRoll={(value: number) => handleRoll(index, value)} 
+      {diceValues.map((diceValue, index) => (
+        <Die
+          key={index} 
+          onRoll={(newValue) => handleRoll(index, newValue)}
         />
       ))}
-      <div className="sum">Sum: {sum}</div>
+        <p>{diceValues.join(', ')}</p>
+        <p>Sum: {diceSum}</p>
     </>
   )
 }
